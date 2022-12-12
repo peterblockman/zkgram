@@ -53,7 +53,7 @@ func get_last_msg{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
 ) -> (msg: Message) {
     let (_last_msg_idx) = last_msg_idx.read(account);
 
-    with_attr error_message("AccessControl: caller is missing role {sender}") {
+    with_attr error_message("Index: last message index is 0") {
         assert_not_zero(_last_msg_idx);
     }
 
