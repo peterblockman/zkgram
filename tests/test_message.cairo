@@ -2,7 +2,7 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from src.chat.chat import send_msg, get_last_msg, get_last_idx, get_msg_by_idx
 
-from tests.constants import TEST_ACC1, TEST_ACC1_PUBKEY, TEST_ACC2, TEST_ACC2_PUBKEY, HELLO, HI
+from tests.constants import TEST_ACC1, TEST_ACC2, HELLO, HI
 
 @external
 func test_send_message{syscall_ptr: felt*, range_check_ptr, pedersen_ptr: HashBuiltin*}() {
