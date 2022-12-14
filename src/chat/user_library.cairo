@@ -3,6 +3,7 @@ from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.starknet.common.syscalls import get_caller_address
 from starkware.cairo.common.math import assert_not_zero
 from starkware.starknet.common.syscalls import get_block_timestamp
+from starkware.cairo.common.bool import FALSE, TRUE
 
 struct User {
     name: felt,
@@ -128,6 +129,29 @@ namespace ChatUser {
         return (friend_status=_friend_status);
     }
 
+    func is_friend{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        user_address: felt, friend_address: felt
+    ) -> (_is_friend: felt) {
+        let (_friend_status) = friend_status.read(user_address, friend_address);
+
+        if (_friend_status == FriendStatus.FRIEND) {
+            return (_is_friend=TRUE);
+        }
+
+        return (_is_friend=FALSE);
+    }
+
+    func assert_is_not_friend{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+        user_address: felt, friend_address: felt
+    ) -> () {
+        let (_is_friend) = is_friend(user_address, friend_address);
+
+        with_attr error_message("FRIEND: not friend") {
+            assert _is_friend = TRUE;
+        }
+        return ();
+    }
+
     func accept_friend{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
         friend_address: felt
     ) -> () {
@@ -143,6 +167,14 @@ namespace ChatUser {
         }
         upsert_friend_status(user_address, friend_address, FriendStatus.FRIEND);
         upsert_friend_status(friend_address, user_address, FriendStatus.FRIEND);
+
+        let (next_friend_index) = friends_length.read(user_address);
+
+        let (friend_user) = get_user(friend_address);
+
+        friends.write(user_address, next_friend_index, friend_user);
+
+        friends_length.write(user_address, next_friend_index + 1);
 
         return ();
     }
