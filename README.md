@@ -13,9 +13,11 @@
  - :white_check_mark: send hash message
  - :white_large_square: send medias
  - :white_large_square: stickers
+ - :white_large_square: UI
  - :white_large_square: implement onchain end-to-end encryption (Signal Protocol)
  - :white_large_square: implement wallet
  - :white_large_square: real estate valuation oracle gateway (Zofuku)
+ - :white_large_square: more tests
 
 
 ## Contributing
